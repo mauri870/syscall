@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +33,12 @@ int main(int argc, char **argv) {
 	for (int i = 0; syscall_table[i].name; i++) {
 		if (strcmp(syscall_table[i].name, argv[1]) == 0) {
 	 		int r  = (*syscall_table[i].func)(arg[1], arg[2], arg[3], arg[4]);
-			printf("Syscall return: %d", r);
+			if (r == -1) {
+				fprintf(stderr, "Error %d: %s\n", errno, strerror(errno));
+			}
+
+			fprintf(stderr, "Syscall return: %d\n", r);
+
 		}
 	}
 
