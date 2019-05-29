@@ -5,7 +5,7 @@
 
 typedef struct {
 	char *name;
-	int (*func)();
+	int code;
 } syscall_lookup_t;
 
 typedef syscall_lookup_t syscall_table_t[];
