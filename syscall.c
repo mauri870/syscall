@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 
 	for (int i = 0; syscall_table[i].name; i++) {
 		if (strcmp(syscall_table[i].name, argv[1]) == 0) {
-	 		int r  = syscall(syscall_table[i].code, arg[1], arg[2], arg[3], arg[4]);
+	 		long r  = syscall(syscall_table[i].code, arg[1], arg[2], arg[3], arg[4]);
 			if (r == -1) {
 				fprintf(stderr, "Error %d: %s\n", errno, strerror(errno));
 			}
