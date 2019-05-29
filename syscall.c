@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "debug.h"
 #include "syscall.h"
@@ -14,12 +15,8 @@
 uintptr_t arg[NARG];
 char *buf[BUF_SIZE];
 
-// TODO: Generate this table at compile time by parsing unistd.h or something
 const syscall_table_t syscall_table = {
-	{ "exit", (int(*)())exit },
-	{ "write", (int(*)())write },
-	{ "read", (int(*)())read },
-	{ "getpid", (int(*)())getpid },
+	#include "tab.h"
 	{ 0, 0 }
 };
 
