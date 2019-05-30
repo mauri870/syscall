@@ -4,7 +4,8 @@ SYSCALLS = exit \
 	   write \
 	   read \
 	   getpid \
-	   fstat
+	   fstat \
+	   close
 
 all: $(NAME)
 $(NAME): tab $(NAME).o
@@ -14,10 +15,10 @@ $(NAME).o: $(NAME).c
 	gcc $(DEBUG) -c $(NAME).c -o $(NAME).o
 
 tab:
+	echo -n > tab.h
 	for s in $(SYSCALLS); do \
-		echo "{ \"$$s\", (int(*)())$$s }," >> tab.tmp; \
+		echo "{ \"$$s\", SYS_$$s }," >> tab.h; \
 	done
-	mv tab.tmp tab.h
 
 debug: DEBUG = -DDEBUG
 debug: all
