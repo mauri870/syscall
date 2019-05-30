@@ -1,0 +1,30 @@
+.TH SYSCALL 1
+.SH NAME
+syscall \- Test a system call
+.SH SYNOPSIS
+.B syscall
+[\fB\-o\fR]
+.IR entry
+.IR arg ...
+.SH DESCRIPTION
+.B syscall(1)
+is an effort to port the plan9 syscall command to Linux. Not all the system calls are supposed to work but the most trivial ones are already implemented.
+.SH OPTIONS
+.TP
+.BR \-o
+Output to stdout the contents of the buffer argument specified as buf.
+.TP
+.BR \-h
+Print a help message and exit.
+.SH EXAMPLES
+Write a string to standard output:
+
+	syscall write 1 hello 5
+
+Read a string from the standard input and output the buffer contents to stdout:
+
+	syscall -o read 0 buf 3
+
+Get the pid of the current running process:
+
+	syscall getpid
