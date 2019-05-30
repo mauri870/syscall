@@ -21,17 +21,39 @@ const syscall_table_t syscall_table = {
 };
 
 int main(int argc, char **argv) {
-	if (argc < 2) return 1;
+	int oflag;
+	int opt;
+	while ((opt = getopt(argc, argv, "oh")) != -1) {
+		switch (opt) {
+			case 'o':
+				oflag = 1;
+				break;
+			case 'h':
+				fprintf(stderr, "usage: \tsyscall [-o] entry [args; buf==1MB buffer]\n");
+				fprintf(stderr, "\tsyscall write 1 hello 5\n");
 
-	for (int i = 1; i < argc; i++) {
-		arg[i - 1] = parse(argv[i]);
+				fprintf(stderr, "\tsyscall -o read 0 buf 5\n");
+			default:
+				exit(EXIT_FAILURE);
+		}
+	}
+
+	if (optind >= argc) {
+		fprintf(stderr, "No entry specified\n");
+		exit(EXIT_FAILURE);
+	}
+
+	for (int i = 0; i < argc - optind; i++) {
+		arg[i] = parse(argv[i + optind]);
 	}
 
 	for (int i = 0; syscall_table[i].name; i++) {
-		if (strcmp(syscall_table[i].name, argv[1]) == 0) {
+		if (strcmp(syscall_table[i].name, (char *) arg[0]) == 0) {
 	 		int r  = (*syscall_table[i].func)(arg[1], arg[2], arg[3], arg[4]);
 			if (r == -1) {
 				fprintf(stderr, "Error %d: %s\n", errno, strerror(errno));
+			} else {
+				if (oflag) printf("%s", buf);
 			}
 
 			fprintf(stderr, "Syscall return: %d\n", r);
