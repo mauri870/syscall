@@ -1,11 +1,24 @@
 NAME = syscall
 
+PREFIX ?= /usr/local
+
 SYSCALLS = exit \
 	   write \
 	   read \
 	   getpid \
-	   fstat \
-	   close
+	   getcwd \
+	   open \
+	   close \
+	   mkdir \
+	   rmdir \
+	   rename \
+	   link \
+	   chmod \
+	   unlink \
+	   symlink \
+	   readlink \
+	   getuid \
+	   syslog
 
 all: $(NAME)
 $(NAME): tab $(NAME).o
@@ -20,6 +33,11 @@ tab:
 		echo "{ \"$$s\", SYS_$$s }," >> tab.h; \
 	done
 
+install: $(NAME)
+	install -m 755 $< $(PREFIX)/bin/$(NAME)
+	gzip -f -k $<.1
+	install -m 644 $<.1.gz $(PREFIX)/share/man/man1/$<.1.gz
+
 debug: DEBUG = -DDEBUG
 debug: all
 
@@ -27,3 +45,4 @@ clean:
 	-rm -f tab.h
 	-rm -f $(NAME).o
 	-rm -f $(NAME)
+	-rm -f $(NAME).1.gz

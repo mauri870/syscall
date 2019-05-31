@@ -31,8 +31,8 @@ int main(int argc, char **argv) {
 			case 'h':
 				fprintf(stderr, "usage: \tsyscall [-o] entry [args; buf==1MB buffer]\n");
 				fprintf(stderr, "\tsyscall write 1 hello 5\n");
-
 				fprintf(stderr, "\tsyscall -o read 0 buf 5\n");
+				fprintf(stderr, "\tsyscall -o getcwd buf 100\n");
 			default:
 				exit(EXIT_FAILURE);
 		}
