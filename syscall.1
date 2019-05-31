@@ -8,7 +8,7 @@ syscall \- Test a system call
 .IR arg ...
 .SH DESCRIPTION
 .B syscall(1)
-is an effort to port the plan9 syscall command to Linux. Not all the system calls are supposed to work since the system call convention on linux is more complex than plan9 but the most trivial ones are already implemented. Instead of relying on the libc implementation of the system calls this program uses the 
+is an effort to port the plan9 syscall command to Linux. Not all the system calls are supposed to work since the system call convention on linux is more complex than plan9 but the most trivial ones are already implemented. Instead of relying on the libc implementation this program uses the 
 .B syscall(2)
 library function to invoke the system calls.
 .SH OPTIONS
