@@ -38,6 +38,9 @@ install: $(NAME)
 	gzip -f -k $<.1
 	install -m 644 $<.1.gz $(PREFIX)/share/man/man1/$<.1.gz
 
+uninstall:
+	rm $(PREFIX)/bin/$(NAME) $(PREFIX)/share/man/man1/$(NAME).1.gz
+
 debug: DEBUG = -DDEBUG
 debug: all
 
