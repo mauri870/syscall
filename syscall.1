@@ -31,9 +31,13 @@ Get the pid of the current running process:
 
 	syscall getpid
 
-Make a directory:
+Get the current working directory:
 
 	syscall -o getcwd buf 100
+
+Create a directory:
+
+	syscall mkdir my-dir 755 
 
 Exit the program with status 2:
 
