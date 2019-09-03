@@ -2,23 +2,55 @@ NAME = syscall
 
 PREFIX ?= /usr/local
 
-SYSCALLS = exit \
+SYSCALLS = read \
 	   write \
-	   read \
-	   getpid \
-	   getcwd \
 	   open \
 	   close \
+	   lseek \
+	   ioctl \
+	   pread64 \
+	   pwrite64 \
+	   access \
+	   pipe \
+	   dup \
+	   dup2 \
+	   pause \
+	   alarm \
+	   getpid \
+	   sendfile \
+	   socket \
+	   getuid \
+	   exit \
+	   kill \
+	   uname \
+	   fcntl \
+	   flock \
+	   fsync \
+	   fdatasync \
+	   truncate \
+	   ftruncate \
+	   getcwd \
+	   chdir \
+	   fchdir \
+	   rename \
 	   mkdir \
 	   rmdir \
-	   rename \
-	   link \
-	   chmod \
 	   unlink \
 	   symlink \
 	   readlink \
+	   chmod \
+	   fchmod \
+	   chown \
+	   fchown \
+	   lchown \
+	   umask \
 	   getuid \
-	   syslog
+	   syslog \
+	   getgid \
+	   setuid \
+	   setgid \
+	   link \
+	   unlink
 
 all: $(NAME)
 $(NAME): tab $(NAME).o
