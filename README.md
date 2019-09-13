@@ -8,6 +8,7 @@ Instead of relying on the libc implementation this program uses the syscall(2) l
 ```bash
 make
 make install
+make uninstall # to remove the syscall program and man page
 ```
 
 ## Usage:
@@ -23,6 +24,6 @@ syscall -h
 syscall write 1 Hello 5
 syscall -o read 0 buf 5
 syscall exit 2
-syscall getpid
-syscall -o getcwd buf 100
+syscall -o getpid
+syscall -ov getcwd buf 100
 ```

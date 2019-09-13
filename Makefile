@@ -1,5 +1,7 @@
 NAME = syscall
 
+CC=gcc
+CFLAGS=-std=c99
 PREFIX ?= /usr/local
 
 SYSCALLS = read \
@@ -52,18 +54,13 @@ SYSCALLS = read \
 	   link \
 	   unlink
 
-all: $(NAME)
-$(NAME): tab $(NAME).o
-	gcc $(NAME).o -o $(NAME)
-
-$(NAME).o: $(NAME).c
-	gcc $(DEBUG) -c $(NAME).c -o $(NAME).o
-
+all: tab $(NAME)
 tab:
 	echo -n > tab.h
 	for s in $(SYSCALLS); do \
 		echo "{ \"$$s\", SYS_$$s }," >> tab.h; \
 	done
+	echo '{ 0, 0},' >> tab.h
 
 install: $(NAME)
 	install -m 755 $< $(PREFIX)/bin/$(NAME)
@@ -72,9 +69,6 @@ install: $(NAME)
 
 uninstall:
 	rm $(PREFIX)/bin/$(NAME) $(PREFIX)/share/man/man1/$(NAME).1.gz
-
-debug: DEBUG = -DDEBUG
-debug: all
 
 clean:
 	-rm -f tab.h

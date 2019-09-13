@@ -3,7 +3,7 @@
 syscall \- Test a system call
 .SH SYNOPSIS
 .B syscall
-[\fB\-o\fR]
+[\fB\-ovh\fR]
 .IR entry
 .IR arg ...
 .SH DESCRIPTION
@@ -15,6 +15,9 @@ library function to invoke the system calls.
 .TP
 .BR \-o
 Output to stdout the contents of the buffer argument specified as buf.
+.TP
+.BR \-v
+Output to stderr the return value of the system call.
 .TP
 .BR \-h
 Print a help message and exit.
@@ -29,11 +32,11 @@ Read a string from the standard input and output the buffer contents to stdout:
 
 Get the pid of the current running process:
 
-	syscall getpid
+	syscall -v getpid
 
 Get the current working directory:
 
-	syscall -o getcwd buf 100
+	syscall -ov getcwd buf 100
 
 Create a directory:
 
