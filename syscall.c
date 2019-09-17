@@ -10,11 +10,10 @@
 
 #include "syscall.h"
 
-#define BUF_SIZE 1048576
 #define NARG 5
 
 uintptr_t arg[NARG];
-char buf[BUF_SIZE];
+char buf[BUFSIZ];
 
 const syscall_table_t syscall_table = {
 #include "tab.h"
