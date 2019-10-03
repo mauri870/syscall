@@ -78,7 +78,7 @@ uintptr_t parse(char *s) {
 
 	l = strtoull(s, &t, 0);
 	if (t > s && *t == 0) {
-		return l;
+		return (uintptr_t)l;
 	}
 
 	return (uintptr_t)s;
