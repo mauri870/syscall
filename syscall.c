@@ -21,7 +21,7 @@ const syscall_table_t syscall_table = {
 
 int main(int argc, char **argv) {
 	int oflag = 0, vflag = 0, opt;
-	while ((opt = getopt(argc, argv, "ovh")) != -1) {
+	while ((opt = getopt(argc, argv, "ovlh")) != -1) {
 		switch (opt) {
 			case 'o':
 				oflag = 1;
@@ -29,9 +29,14 @@ int main(int argc, char **argv) {
 			case 'v':
 				vflag = 1;
 				break;
+			case 'l':
+				for (int i = 0; syscall_table[i].name; i++) {
+					fprintf(stdout, "%s ", syscall_table[i].name);
+				}
+				return 0;
 			case 'h':
 				fprintf(stderr,
-					"usage: \tsyscall [-o -v] entry [args; "
+					"usage: \tsyscall [-o -v -l] entry [args; "
 					"buf==1MB buffer]\n");
 				fprintf(stderr, "\tsyscall write 1 hello 5\n");
 				fprintf(stderr, "\tsyscall -o read 0 buf 5\n");

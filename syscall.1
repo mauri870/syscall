@@ -3,7 +3,7 @@
 syscall \- Test a system call
 .SH SYNOPSIS
 .B syscall
-[\fB\-ovh\fR]
+[\fB\-ovlh\fR]
 .IR entry
 .IR arg ...
 .SH DESCRIPTION
@@ -18,6 +18,9 @@ Output to stdout the contents of the buffer argument specified as buf.
 .TP
 .BR \-v
 Output to stderr the return value of the system call.
+.TP
+.BR \-l
+Print all the available system calls and exit. Note that not all the linux system calls can be invoked using this tool.
 .TP
 .BR \-h
 Print a help message and exit.
