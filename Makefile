@@ -1,7 +1,7 @@
 NAME = syscall
 
 CC=gcc
-CFLAGS=-std=c99
+CFLAGS=-std=c99 -Wall -Wpedantic
 PREFIX ?= /usr/local
 
 SYSCALLS = read \
