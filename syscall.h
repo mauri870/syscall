@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 typedef struct {
-	char *name;
-	long code;
+  char *name;
+  long code;
 } syscall_lookup_t;
 
 typedef syscall_lookup_t syscall_table_t[];
