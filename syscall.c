@@ -1,23 +1,20 @@
-#define _GNU_SOURCE
 #include <errno.h>
 #include <getopt.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/syscall.h>
+#include <sys/random.h>
 #include <unistd.h>
 
-#include "syscall.h"
+#include "syscalls_generated.c"
 
 #define NARG 5
 
 uintptr_t arg[NARG];
 char buf[BUFSIZ];
 
-const syscall_table_t syscall_table = {
-#include "tab.h"
-};
+uintptr_t parse(char *s);
 
 int main(int argc, char **argv) {
   int oflag = 0, vflag = 0, opt;
@@ -30,9 +27,6 @@ int main(int argc, char **argv) {
       vflag = 1;
       break;
     case 'l':
-      for (int i = 0; syscall_table[i].name; i++) {
-        fprintf(stdout, "%s ", syscall_table[i].name);
-      }
       return 0;
     case 'h':
       fprintf(stderr, "usage: \tsyscall [-o -v -l] entry [args; "
@@ -54,22 +48,17 @@ int main(int argc, char **argv) {
     arg[i] = parse(argv[i + optind]);
   }
 
-  for (int i = 0; syscall_table[i].name; i++) {
-    if (strcmp(syscall_table[i].name, (char *)arg[0]) == 0) {
-      int rc = syscall(syscall_table[i].code, arg[1], arg[2], arg[3], arg[4]);
-      if (rc == -1) {
-        perror("syscall");
-      }
-
-      if (oflag)
-        printf("%s", buf);
-      if (vflag)
-        fprintf(stderr, "Syscall return: %d\n", rc);
-      return 0;
-    }
+  handle_syscall(arg);
+  if (errno != 0) {
+    fprintf(stderr, strerror(errno));
+    return -1;
   }
-  fprintf(stderr, "Invalid syscall entry: %s\n", (char *)arg[0]);
-  return -1;
+
+  if (oflag)
+    printf("%s", buf);
+  if (vflag)
+    fprintf(stderr, "Syscall return: %d\n", errno);
+  return 0;
 }
 
 uintptr_t parse(char *s) {

@@ -7,6 +7,8 @@ Instead of relying on the libc implementation this program uses the syscall(2) l
 
 ```bash
 make
+# For a cosmopolitan binary
+CC=/path/to/bin/cosmocc make
 make install
 make uninstall # to remove the syscall program and man page
 ```
