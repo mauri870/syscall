@@ -1,8 +1,11 @@
 NAME = syscall
 
-CC=gcc
-CFLAGS=-std=c99 -Wall -Wpedantic
-PREFIX ?= /usr/local
+CC      ?= gcc
+CFLAGS  ?= -O2 -std=c99 -Wall -Wpedantic
+LDFLAGS ?=
+PREFIX  ?= /usr/local
+BINDIR  ?= $(PREFIX)/bin
+MANDIR  ?= $(PREFIX)/share/man/man1
 
 SYSCALLS = read \
 	   write \
@@ -54,24 +57,32 @@ SYSCALLS = read \
 	   link \
 	   unlink
 
-all: tab $(NAME)
-tab:
-	echo -n > tab.h
-	for s in $(SYSCALLS); do \
+all: $(NAME)
+
+$(NAME): tab.h $(NAME).o
+	$(CC) $(CFLAGS) -o $@ $(NAME).o $(LDFLAGS)
+
+$(NAME).o: $(NAME).c tab.h
+	$(CC) $(CFLAGS) -c $<
+
+tab.h:
+	@echo "Generating tab.h"
+	@echo -n > tab.h
+	@for s in $(SYSCALLS); do \
 		echo "{ \"$$s\", SYS_$$s }," >> tab.h; \
 	done
-	echo '{ 0, 0},' >> tab.h
+	@echo '{ 0, 0 },' >> tab.h
 
 install: $(NAME)
-	install -m 755 $< $(PREFIX)/bin/$(NAME)
-	gzip -f -k $<.1
-	install -m 644 $<.1.gz $(PREFIX)/share/man/man1/$<.1.gz
+	install -d $(BINDIR) $(MANDIR)
+	install -m 755 $(NAME) $(BINDIR)/$(NAME)
+	gzip -f -k $(NAME).1
+	install -m 644 $(NAME).1.gz $(MANDIR)/$(NAME).1.gz
 
 uninstall:
-	rm $(PREFIX)/bin/$(NAME) $(PREFIX)/share/man/man1/$(NAME).1.gz
+	rm -f $(BINDIR)/$(NAME) $(MANDIR)/$(NAME).1.gz
 
 clean:
-	-rm -f tab.h
-	-rm -f $(NAME).o
-	-rm -f $(NAME)
-	-rm -f $(NAME).1.gz
+	rm -f tab.h $(NAME).o $(NAME) $(NAME).1.gz
+
+.PHONY: all install uninstall clean
