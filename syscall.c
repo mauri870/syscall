@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
         printf("%s", buf);
       if (vflag)
         fprintf(stderr, "Syscall return: %ld\n", rc);
-      return 0;
+      return rc == -1 ? 1 : 0;
     }
   }
   fprintf(stderr, "Invalid syscall entry: %s\n", (char *)arg[0]);
