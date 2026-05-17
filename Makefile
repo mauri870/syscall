@@ -7,65 +7,6 @@ PREFIX  ?= /usr/local
 BINDIR  ?= $(PREFIX)/bin
 MANDIR  ?= $(PREFIX)/share/man/man1
 
-SYSCALLS = read \
-	   write \
-	   open \
-	   close \
-	   lseek \
-	   ioctl \
-	   pread64 \
-	   pwrite64 \
-	   access \
-	   pipe \
-	   dup \
-	   dup2 \
-	   pause \
-	   alarm \
-	   getpid \
-	   sendfile \
-	   socket \
-	   exit \
-	   kill \
-	   uname \
-	   fcntl \
-	   flock \
-	   fsync \
-	   fdatasync \
-	   truncate \
-	   ftruncate \
-	   getcwd \
-	   chdir \
-	   fchdir \
-	   rename \
-	   mkdir \
-	   rmdir \
-	   symlink \
-	   readlink \
-	   chmod \
-	   fchmod \
-	   chown \
-	   fchown \
-	   lchown \
-	   umask \
-	   getuid \
-	   syslog \
-	   getgid \
-	   setuid \
-	   setgid \
-	   link \
-	   unlink \
-	   stat \
-	   fstat \
-	   lstat \
-	   mmap \
-	   munmap \
-	   wait4 \
-	   geteuid \
-	   getegid \
-	   getpgrp \
-	   nanosleep \
-	   clock_gettime
-
 all: $(NAME)
 
 $(NAME): tab.h $(NAME).o
@@ -76,10 +17,11 @@ $(NAME).o: $(NAME).c tab.h
 
 tab.h:
 	@echo "Generating tab.h"
-	@echo -n > tab.h
-	@for s in $(SYSCALLS); do \
-		echo "{ \"$$s\", SYS_$$s }," >> tab.h; \
-	done
+	@echo | $(CC) -E -dM -include sys/syscall.h - \
+		| grep '#define SYS_' \
+		| sort \
+		| awk '{print "{ \"" substr($$2,5) "\", " $$2 " },"}' \
+		> tab.h
 	@echo '{ 0, 0 },' >> tab.h
 
 install: $(NAME)
