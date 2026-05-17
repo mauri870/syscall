@@ -8,43 +8,92 @@ syscall \- Test a system call
 .IR arg ...
 .SH DESCRIPTION
 .B syscall(1)
-is an effort to port the plan9 syscall command to Linux. Not all the system calls are supposed to work since the system call convention on linux is more complex than plan9 but the most trivial ones are already implemented. Instead of relying on the libc implementation this program uses the 
-.B syscall(2)
-library function to invoke the system calls.
+is a port of the Plan\ 9 syscall command to Linux.
+Rather than going through libc, it invokes system calls directly using the
+.BR syscall (2)
+library function, which makes it useful for testing kernel behaviour,
+understanding how system calls work, and quick scripting without writing C.
+.PP
+Not every Linux syscall is invocable this way \(em some require kernel
+structures that cannot be expressed as plain scalars \(em but the most
+common ones work fine.
+Up to six arguments can be passed, matching the maximum number of arguments
+any Linux syscall takes.
 .SH OPTIONS
 .TP
 .BR \-o
-Output to stdout the contents of the buffer argument specified as buf.
+Print the contents of
+.B buf
+to stdout after the call.
 .TP
 .BR \-v
-Output to stderr the return value of the system call.
+Print the syscall return value to stderr.
 .TP
 .BR \-l
-Print all the available system calls and exit. Note that not all the linux system calls can be invoked using this tool.
+List all available syscalls, one per line, and exit.
 .TP
 .BR \-h
-Print a help message and exit.
+Print a usage message and exit.
+.SH SPECIAL ARGUMENTS
+The following tokens are recognised by the argument parser and expanded
+before being passed to the syscall:
+.TP
+.B buf
+An 8\ KB scratch buffer, passed as a pointer.
+Use with
+.B \-o
+to read its contents after the call.
+.TP
+.BR stdin ", " stdout ", " stderr
+Expand to file descriptors 0, 1, and 2 respectively.
 .SH EXAMPLES
 Write a string to standard output:
-
-	syscall write 1 hello 5
-
-Read a string from the standard input and output the buffer contents to stdout:
-
-	syscall -o read 0 buf 3
-
-Get the pid of the current running process:
-
-	syscall -v getpid
-
+.PP
+.RS
+syscall write stdout hello 5
+.RE
+.PP
+Read 5 bytes from stdin and print the buffer:
+.PP
+.RS
+echo \-n hello | syscall \-o read stdin buf 5
+.RE
+.PP
 Get the current working directory:
-
-	syscall -ov getcwd buf 100
-
+.PP
+.RS
+syscall \-ov getcwd buf 100
+.RE
+.PP
+Get the PID of the current process:
+.PP
+.RS
+syscall \-v getpid
+.RE
+.PP
 Create a directory:
-
-	syscall mkdir my-dir 755 
-
-Exit the program with status 2:
-
-	syscall -o exit 2
+.PP
+.RS
+syscall mkdir my\-dir 0755
+.RE
+.PP
+Rename a file:
+.PP
+.RS
+syscall rename old\-name new\-name
+.RE
+.PP
+Test file accessibility (exit code reflects success or failure):
+.PP
+.RS
+syscall access /etc/shadow 0 || echo "no access"
+.RE
+.PP
+Exit with a specific status code:
+.PP
+.RS
+syscall exit 2
+.RE
+.SH SEE ALSO
+.BR syscall (2),
+.BR intro (2)

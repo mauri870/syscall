@@ -89,7 +89,7 @@ install: $(NAME)
 	install -m 644 $(NAME).1.gz $(MANDIR)/$(NAME).1.gz
 
 uninstall:
-	rm -f $(BINDIR)/$(NAME) $(MANDIR)/$(NAME).1.gz
+	rm -f $(BINDIR)/$(NAME) $(MANDIR)/$(NAME).1.gz $(PREFIX)/man/man1/$(NAME).1.gz
 
 test: $(NAME)
 	bats test/syscall.bats
