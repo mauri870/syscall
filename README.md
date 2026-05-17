@@ -1,29 +1,82 @@
-# syscall - Test a system call
+# syscall - Invoke a Linux system call by name
 
-This is an effort to port the plan9 syscall command to Linux. Not all the system calls are supposed to work since the system call convention on linux is more complex than plan9 but the most trivial ones are already implemented.
-Instead of relying on the libc implementation this program uses the syscall(2) library function to invoke system calls.
+A port of the [Plan 9 syscall command](https://plan9.io/magic/man2html/1/syscall) to Linux. Rather than going through libc, it calls `syscall(2)` directly, which makes it useful for testing kernel behaviour, understanding how system calls work, and quick scripting without writing C.
 
-## Compilation
+Not every Linux syscall is invocable this way — some require kernel structures that can't be expressed as plain scalars — but the most common ones work fine.
 
-```bash
+## Build
+
+```sh
 make
+make test
 make install
-make uninstall # to remove the syscall program and man page
+make uninstall
 ```
 
-## Usage:
+## Usage
 
-```bash
-man 1 syscall
-syscall -h
 ```
+syscall [-o -v -l -h] entry [arg ...]
+```
+
+| Flag | Effect |
+|------|--------|
+| `-o` | Print the contents of `buf` to stdout after the call |
+| `-v` | Print the syscall return value to stderr |
+| `-l` | List all available syscalls and exit |
+| `-h` | Print usage and exit |
+
+### Special arguments
+
+| Token | Expands to |
+|-------|-----------|
+| `buf` | An 8 KB scratch buffer, passed as a pointer |
+| `stdin` | File descriptor 0 |
+| `stdout` | File descriptor 1 |
+| `stderr` | File descriptor 2 |
+
+Up to 6 arguments can be passed, matching the maximum number of arguments any Linux syscall takes.
 
 ## Examples
 
-```bash
-syscall write 1 Hello 5
-syscall -o read 0 buf 5
-syscall exit 2
-syscall -o getpid
+Write a string to standard output:
+
+```sh
+syscall write stdout hello 5
+```
+
+Read 5 bytes from stdin and print the buffer:
+
+```sh
+echo -n hello | syscall -o read stdin buf 5
+```
+
+Get the current working directory:
+
+```sh
 syscall -ov getcwd buf 100
+```
+
+Get the PID of the current process:
+
+```sh
+syscall -v getpid
+```
+
+Create a directory:
+
+```sh
+syscall mkdir my-dir 0755
+```
+
+Exit with a specific status code:
+
+```sh
+syscall exit 2
+```
+
+List all available syscalls:
+
+```sh
+syscall -l
 ```

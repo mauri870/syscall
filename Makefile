@@ -91,7 +91,10 @@ install: $(NAME)
 uninstall:
 	rm -f $(BINDIR)/$(NAME) $(MANDIR)/$(NAME).1.gz
 
+test: $(NAME)
+	bats test/syscall.bats
+
 clean:
 	rm -f tab.h $(NAME).o $(NAME) $(NAME).1.gz
 
-.PHONY: all install uninstall clean
+.PHONY: all install uninstall clean test
