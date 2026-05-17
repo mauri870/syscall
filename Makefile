@@ -24,7 +24,6 @@ SYSCALLS = read \
 	   getpid \
 	   sendfile \
 	   socket \
-	   getuid \
 	   exit \
 	   kill \
 	   uname \
@@ -40,7 +39,6 @@ SYSCALLS = read \
 	   rename \
 	   mkdir \
 	   rmdir \
-	   unlink \
 	   symlink \
 	   readlink \
 	   chmod \

@@ -31,15 +31,16 @@ int main(int argc, char **argv) {
       break;
     case 'l':
       for (int i = 0; syscall_table[i].name; i++) {
-        fprintf(stdout, "%s ", syscall_table[i].name);
+        fprintf(stdout, "%s\n", syscall_table[i].name);
       }
       return 0;
     case 'h':
       fprintf(stderr, "usage: \tsyscall [-o -v -l] entry [args; "
-                      "buf==1MB buffer]\n");
+                      "buf==8KB buffer]\n");
       fprintf(stderr, "\tsyscall write 1 hello 5\n");
       fprintf(stderr, "\tsyscall -o read 0 buf 5\n");
       fprintf(stderr, "\tsyscall -o getcwd buf 100\n");
+      return 0;
     default:
       return -1;
     }
@@ -50,13 +51,13 @@ int main(int argc, char **argv) {
     return -1;
   }
 
-  for (int i = 0; i < argc - optind; i++) {
+  for (int i = 0; i < NARG && i < argc - optind; i++) {
     arg[i] = parse(argv[i + optind]);
   }
 
   for (int i = 0; syscall_table[i].name; i++) {
     if (strcmp(syscall_table[i].name, (char *)arg[0]) == 0) {
-      int rc = syscall(syscall_table[i].code, arg[1], arg[2], arg[3], arg[4]);
+      long rc = syscall(syscall_table[i].code, arg[1], arg[2], arg[3], arg[4]);
       if (rc == -1) {
         perror("syscall");
       }
@@ -64,7 +65,7 @@ int main(int argc, char **argv) {
       if (oflag)
         printf("%s", buf);
       if (vflag)
-        fprintf(stderr, "Syscall return: %d\n", rc);
+        fprintf(stderr, "Syscall return: %ld\n", rc);
       return 0;
     }
   }
