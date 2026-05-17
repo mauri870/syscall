@@ -53,7 +53,18 @@ SYSCALLS = read \
 	   setuid \
 	   setgid \
 	   link \
-	   unlink
+	   unlink \
+	   stat \
+	   fstat \
+	   lstat \
+	   mmap \
+	   munmap \
+	   wait4 \
+	   geteuid \
+	   getegid \
+	   getpgrp \
+	   nanosleep \
+	   clock_gettime
 
 all: $(NAME)
 
