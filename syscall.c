@@ -10,7 +10,7 @@
 
 #include "syscall.h"
 
-#define NARG 5
+#define NARG 7
 
 uintptr_t arg[NARG];
 char buf[BUFSIZ];
@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 
   for (int i = 0; syscall_table[i].name; i++) {
     if (strcmp(syscall_table[i].name, (char *)arg[0]) == 0) {
-      long rc = syscall(syscall_table[i].code, arg[1], arg[2], arg[3], arg[4]);
+      long rc = syscall(syscall_table[i].code, arg[1], arg[2], arg[3], arg[4], arg[5], arg[6]);
       if (rc == -1) {
         perror("syscall");
       }
