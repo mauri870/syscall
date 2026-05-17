@@ -77,9 +77,14 @@ uintptr_t parse(char *s) {
   char *t;
   uintptr_t l;
 
-  if (strcmp(s, "buf") == 0) {
+  if (strcmp(s, "buf") == 0)
     return (uintptr_t)buf;
-  }
+  if (strcmp(s, "stdin") == 0)
+    return STDIN_FILENO;
+  if (strcmp(s, "stdout") == 0)
+    return STDOUT_FILENO;
+  if (strcmp(s, "stderr") == 0)
+    return STDERR_FILENO;
 
   l = strtoull(s, &t, 0);
   if (t > s && *t == 0) {
