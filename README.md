@@ -22,6 +22,7 @@ syscall [-o -v -l -h] entry [arg ...]
 | Flag | Effect |
 |------|--------|
 | `-o` | Print the contents of `buf` to stdout after the call |
+| `-n bytes` | With `-o`, print exactly `bytes` bytes using `fwrite` instead of stopping at the first null |
 | `-v` | Print the syscall return value to stderr |
 | `-l` | List all available syscalls and exit |
 | `-h` | Print usage and exit |
@@ -67,6 +68,12 @@ Get 16 bytes of random data from the kernel (1 == `GRND_RANDOM`):
 
 ```sh
 syscall -ov getrandom buf 16 1
+```
+
+Dump all fields of `struct utsname` across null bytes:
+
+```sh
+syscall -on 390 uname buf | tr '\0' ' ' | tr -s ' '
 ```
 
 Create a directory:

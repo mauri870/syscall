@@ -21,7 +21,8 @@ const syscall_table_t syscall_table = {
 
 int main(int argc, char **argv) {
   int oflag = 0, vflag = 0, opt;
-  while ((opt = getopt(argc, argv, "ovlh")) != -1) {
+  size_t ncount = 0;
+  while ((opt = getopt(argc, argv, "ovln:h")) != -1) {
     switch (opt) {
     case 'o':
       oflag = 1;
@@ -29,13 +30,16 @@ int main(int argc, char **argv) {
     case 'v':
       vflag = 1;
       break;
+    case 'n':
+      ncount = (size_t)strtoull(optarg, NULL, 0);
+      break;
     case 'l':
       for (int i = 0; syscall_table[i].name; i++) {
         fprintf(stdout, "%s\n", syscall_table[i].name);
       }
       return 0;
     case 'h':
-      fprintf(stderr, "usage: \tsyscall [-o -v -l] entry [args; "
+      fprintf(stderr, "usage: \tsyscall [-o -v -l -n bytes] entry [args; "
                       "buf==8KB buffer]\n");
       fprintf(stderr, "\tsyscall write 1 hello 5\n");
       fprintf(stderr, "\tsyscall -o read 0 buf 5\n");
@@ -62,8 +66,12 @@ int main(int argc, char **argv) {
         perror("syscall");
       }
 
-      if (oflag)
-        printf("%s", buf);
+      if (oflag) {
+        if (ncount > 0)
+          fwrite(buf, 1, ncount, stdout);
+        else
+          printf("%s", buf);
+      }
       if (vflag)
         fprintf(stderr, "Syscall return: %ld\n", rc);
       return rc == -1 ? 1 : 0;

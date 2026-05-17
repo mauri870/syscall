@@ -4,6 +4,7 @@ syscall \- Test a system call
 .SH SYNOPSIS
 .B syscall
 [\fB\-ovlh\fR]
+[\fB\-n\fR \fIbytes\fR]
 .IR entry
 .IR arg ...
 .SH DESCRIPTION
@@ -25,6 +26,18 @@ any Linux syscall takes.
 Print the contents of
 .B buf
 to stdout after the call.
+.TP
+.BI \-n " bytes"
+With
+.BR \-o ,
+print exactly
+.I bytes
+bytes from
+.B buf
+using
+.BR fwrite (3)
+instead of stopping at the first null byte.
+Useful for syscalls that write binary data or structs into the buffer.
 .TP
 .BR \-v
 Print the syscall return value to stderr.
@@ -89,10 +102,15 @@ Test file accessibility (exit code reflects success or failure):
 syscall access /etc/shadow 0 || echo "no access"
 .RE
 .PP
+Dump all fields of
+.B struct utsname
+(6 x 65 bytes) by printing the full buffer:
+.PP
+.RS
+syscall \-on 390 uname buf | tr '\0' ' ' | tr \-s ' '
+.RE
+.PP
 Get 16 bytes of random data from the kernel
-.RB ( stdout
-== 1 ==
-.BR GRND_RANDOM ):
 .PP
 .RS
 syscall \-ov getrandom buf 16 1

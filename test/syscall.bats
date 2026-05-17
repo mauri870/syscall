@@ -92,6 +92,31 @@ SYSCALL="$BATS_TEST_DIRNAME/../syscall"
 }
 
 # ---------------------------------------------------------------------------
+# -n: exact byte count output
+# ---------------------------------------------------------------------------
+
+@test "-n prints exactly n bytes from buf" {
+    run bash -c "$SYSCALL -on 16 getrandom buf 16 0 | wc -c"
+    [ "$status" -eq 0 ]
+    [ "$output" -eq 16 ]
+}
+
+@test "-n crosses null bytes in struct output" {
+    # struct utsname is 6 x 65 bytes = 390; without -n, output stops at first null
+    local plain short
+    plain=$(./syscall -o uname buf)
+    short=$(./syscall -on 390 uname buf | wc -c)
+    [ "$short" -eq 390 ]
+    [ "${#plain}" -lt 390 ]
+}
+
+@test "-n without -o produces no output" {
+    run "$SYSCALL" -n 16 getrandom buf 16 0
+    [ "$status" -eq 0 ]
+    [ -z "$output" ]
+}
+
+# ---------------------------------------------------------------------------
 # getrandom
 # ---------------------------------------------------------------------------
 
