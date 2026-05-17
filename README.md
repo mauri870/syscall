@@ -1,4 +1,4 @@
-# syscall - Invoke a Linux system call by name
+# syscall - Test a Linux system call
 
 A port of the [Plan 9 syscall command](https://plan9.io/magic/man2html/1/syscall) to Linux. Rather than going through libc, it calls `syscall(2)` directly, which makes it useful for testing kernel behaviour, understanding how system calls work, and quick scripting without writing C.
 
@@ -67,6 +67,12 @@ Create a directory:
 
 ```sh
 syscall mkdir my-dir 0755
+```
+
+Rename a file:
+
+```sh
+syscall rename old-name new-name
 ```
 
 Exit with a specific status code:
