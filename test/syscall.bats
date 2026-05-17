@@ -92,6 +92,22 @@ SYSCALL="$BATS_TEST_DIRNAME/../syscall"
 }
 
 # ---------------------------------------------------------------------------
+# getrandom
+# ---------------------------------------------------------------------------
+
+@test "getrandom returns requested byte count" {
+    run --separate-stderr "$SYSCALL" -v getrandom buf 16 0
+    [ "$status" -eq 0 ]
+    [ "$stderr" = "Syscall return: 16" ]
+}
+
+@test "getrandom with GRND_RANDOM flag returns requested byte count" {
+    run --separate-stderr "$SYSCALL" -v getrandom buf 16 1
+    [ "$status" -eq 0 ]
+    [ "$stderr" = "Syscall return: 16" ]
+}
+
+# ---------------------------------------------------------------------------
 # Scalar input and scalar return
 # ---------------------------------------------------------------------------
 

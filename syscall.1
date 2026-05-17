@@ -89,6 +89,15 @@ Test file accessibility (exit code reflects success or failure):
 syscall access /etc/shadow 0 || echo "no access"
 .RE
 .PP
+Get 16 bytes of random data from the kernel
+.RB ( stdout
+== 1 ==
+.BR GRND_RANDOM ):
+.PP
+.RS
+syscall \-ov getrandom buf 16 1
+.RE
+.PP
 Exit with a specific status code:
 .PP
 .RS

@@ -63,6 +63,12 @@ Get the PID of the current process:
 syscall -v getpid
 ```
 
+Get 16 bytes of random data from the kernel (1 == `GRND_RANDOM`):
+
+```sh
+syscall -ov getrandom buf 16 1
+```
+
 Create a directory:
 
 ```sh
